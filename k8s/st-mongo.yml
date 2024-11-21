@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb-service
+spec:
+  serviceName: mongodb-service
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: mongodb-service
+  template:
+    metadata:
+      labels:
+        app: mongodb-service
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:latest  # Use the official MongoDB Docker image
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: mongodb-data
+          mountPath: /data/db
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 500Mi

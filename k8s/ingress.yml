@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: questionnaire-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - host: questionnaire.local
+    http:
+      paths:
+      - pathType: ImplementationSpecific
+        path: /api(/|$)(.*)
+        backend:
+          service:
+            name: backend
+            port:
+              number: 80
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80
